@@ -4,6 +4,7 @@
 *.a
 *.elf
 *.bin
+*.ota.bin
 *.map
 *.hex
 *.dis
@@ -42,3 +43,9 @@ user.props
 # Generated rst files
 ######################
 genrst/
+
+# MXOS-Cube output files
+######################
+.gdbinit
+.openocd_cfg
+.mxos

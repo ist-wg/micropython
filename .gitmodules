@@ -18,6 +18,9 @@
 [submodule "lib/nrfx"]
 	path = lib/nrfx
 	url = https://github.com/NordicSemiconductor/nrfx.git
+[submodule "ports/emw3060/app/mxos"]
+	path = ports/emw3060/app/mxos
+	url = https://github.com/MXCHIP/mxos
 [submodule "lib/mbedtls"]
 	path = lib/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
