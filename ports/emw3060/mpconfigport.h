@@ -58,6 +58,10 @@
 #define MICROPY_LONGINT_IMPL        (MICROPY_LONGINT_IMPL_NONE)
 #define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_NONE)
 
+#define MICROPY_PY_MACHINE 			(1)
+#define MICROPY_PY_MACHINE_PIN_MAKE_NEW		(1)
+
+
 // type definitions for the specific machine
 
 #define MICROPY_MAKE_POINTER_CALLABLE(p) ((void*)((mp_uint_t)(p) | 1))
@@ -79,11 +83,16 @@ typedef long mp_off_t;
 #define MICROPY_PORT_BUILTINS \
     { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
 
+extern const struct _mp_obj_module_t mp_module_machine;
+
+#define MICROPY_PORT_BUILTIN_MODULES \
+    { MP_OBJ_NEW_QSTR(MP_QSTR_machine), (mp_obj_t)&mp_module_machine }, \
+
 // We need to provide a declaration/definition of alloca()
 #include <alloca.h>
 
 #define MICROPY_HW_BOARD_NAME "minimal"
-#define MICROPY_HW_MCU_NAME "unknown-cpu"
+#define MICROPY_HW_MCU_NAME "EMW3060"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)

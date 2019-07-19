@@ -28,12 +28,17 @@ LIBS =
 SRC_C = \
 	main.c \
 	uart_core.c \
+	modmachine.c \
+	machine_pin.c \
 	lib/utils/printf.c \
 	lib/utils/stdout_helpers.c \
 	lib/utils/pyexec.c \
 	lib/libc/string0.c \
 	lib/mp-readline/readline.c \
-	$(BUILD)/_frozen_mpy.c \
+
+SRC_C_FROZEN = $(BUILD)/_frozen_mpy.c
+
+SRC_QSTR += $(SRC_C)
 
 INC += -I$(BUILD)/../app/upy
 
@@ -79,7 +84,7 @@ INC += $(addprefix -I$(BUILD)/../app/mxos/, \
 	libraries/protocols/mdns/internal \
 	)
 
-OBJ = $(PY_CORE_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
+OBJ = $(PY_CORE_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o)) $(addprefix $(BUILD)/, $(SRC_C_FROZEN:.c=.o))
 
 all: mxos-clean $(BUILD)/upy@MK3060.ota.bin
 
@@ -102,14 +107,14 @@ $(BUILD)/upy@MK3060.ota.bin: $(BUILD)/upython.a mxos-setup
 mxos-setup:
 	$(ECHO) "Fixing MXOS faults"
 	$(Q)$(CP) mxos_board.h app/mxos/board/MK3060/mxos_board.h
-	$(Q)$(CP) map_parse_gcc.py app/mxos/makefiles/scripts/map_parse_gcc.py
+	$(Q)$(CP) mxos_map_parse_gcc.py app/mxos/makefiles/scripts/map_parse_gcc.py
 	$(Q)$(RM) -r -f app/mxos/platform/MCU/MOC108/tools/xz/linux
 	$(Q)$(MKDIR) app/mxos/platform/MCU/MOC108/tools/xz/linux
 	$(Q)ln -s /usr/bin/xz app/mxos/platform/MCU/MOC108/tools/xz/linux/xz
 	$(ECHO) "Faking MXOS project"
 	$(ECHO) "ROOT=.\nMICODER=$(MICODER)" >> app/.mxos
 	$(Q)$(MKDIR) -p app/build/upy@MK3060
-	$(Q)$(CP) config.mk app/build/upy@MK3060/config.mk
+	$(Q)$(CP) mxosconfig.mk app/build/upy@MK3060/config.mk
 
 .PHONY: mxos-setup
 
