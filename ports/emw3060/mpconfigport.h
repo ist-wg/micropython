@@ -2,64 +2,103 @@
 
 // options to control how MicroPython is built
 
-// You can disable the built-in MicroPython compiler by setting the following
-// config option to 0.  If you do this then you won't get a REPL prompt, but you
-// will still be able to execute pre-compiled scripts, compiled with mpy-cross.
-#define MICROPY_ENABLE_COMPILER     (1)
+// Memory
+#define MICROPY_QSTR_EXTRA_POOL     	mp_qstr_frozen_const_pool
+#define MICROPY_ALLOC_PATH_MAX      	(256)
+#define MICROPY_ALLOC_PARSE_CHUNK_INIT 	(16)
 
-#define MICROPY_QSTR_BYTES_IN_HASH  (1)
-#define MICROPY_QSTR_EXTRA_POOL     mp_qstr_frozen_const_pool
-#define MICROPY_ALLOC_PATH_MAX      (256)
-#define MICROPY_ALLOC_PARSE_CHUNK_INIT (16)
+// Emitters
 #define MICROPY_EMIT_X64            (0)
 #define MICROPY_EMIT_THUMB          (0)
 #define MICROPY_EMIT_INLINE_THUMB   (0)
-#define MICROPY_COMP_MODULE_CONST   (0)
-#define MICROPY_COMP_CONST          (0)
-#define MICROPY_COMP_DOUBLE_TUPLE_ASSIGN (0)
-#define MICROPY_COMP_TRIPLE_TUPLE_ASSIGN (0)
-#define MICROPY_MEM_STATS           (0)
-#define MICROPY_DEBUG_PRINTERS      (0)
-#define MICROPY_ENABLE_GC           (1)
-#define MICROPY_GC_ALLOC_THRESHOLD  (0)
-#define MICROPY_REPL_EVENT_DRIVEN   (1)
-#define MICROPY_HELPER_REPL         (1)
-#define MICROPY_HELPER_LEXER_UNIX   (0)
-#define MICROPY_ENABLE_SOURCE_LINE  (0)
-#define MICROPY_ENABLE_DOC_STRING   (0)
-#define MICROPY_ERROR_REPORTING     (MICROPY_ERROR_REPORTING_TERSE)
-#define MICROPY_BUILTIN_METHOD_CHECK_SELF_ARG (0)
-#define MICROPY_PY_ASYNC_AWAIT      (0)
-#define MICROPY_PY_BUILTINS_BYTEARRAY (0)
-#define MICROPY_PY_BUILTINS_DICT_FROMKEYS (0)
-#define MICROPY_PY_BUILTINS_MEMORYVIEW (0)
-#define MICROPY_PY_BUILTINS_ENUMERATE (0)
-#define MICROPY_PY_BUILTINS_FILTER  (0)
-#define MICROPY_PY_BUILTINS_FROZENSET (0)
-#define MICROPY_PY_BUILTINS_REVERSED (0)
-#define MICROPY_PY_BUILTINS_SET     (0)
-#define MICROPY_PY_BUILTINS_SLICE   (0)
-#define MICROPY_PY_BUILTINS_PROPERTY (0)
-#define MICROPY_PY_BUILTINS_MIN_MAX (0)
-#define MICROPY_PY_BUILTINS_STR_COUNT (0)
-#define MICROPY_PY_BUILTINS_STR_OP_MODULO (0)
-#define MICROPY_PY___FILE__         (0)
-#define MICROPY_PY_GC               (0)
-#define MICROPY_PY_ARRAY            (0)
-#define MICROPY_PY_ATTRTUPLE        (0)
-#define MICROPY_PY_COLLECTIONS      (0)
-#define MICROPY_PY_MATH             (0)
-#define MICROPY_PY_CMATH            (0)
-#define MICROPY_PY_IO               (0)
-#define MICROPY_PY_STRUCT           (0)
-#define MICROPY_PY_SYS              (0)
-#define MICROPY_MODULE_FROZEN_MPY   (1)
-#define MICROPY_CPYTHON_COMPAT      (0)
-#define MICROPY_LONGINT_IMPL        (MICROPY_LONGINT_IMPL_NONE)
-#define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_NONE)
 
-#define MICROPY_PY_MACHINE 			(1)
-#define MICROPY_PY_MACHINE_PIN_MAKE_NEW		(1)
+// Compiler
+#define MICROPY_ENABLE_COMPILER     			(1)
+#define MICROPY_COMP_MODULE_CONST   			(1)
+#define MICROPY_BUILTIN_METHOD_CHECK_SELF_ARG 	(1)
+
+// Internals
+#define MICROPY_ENABLE_GC           (1)
+#define MICROPY_ENABLE_GC 			(1)
+#define MICROPY_ENABLE_PYSTACK 		(0) // look at l8er
+#define MICROPY_HELPER_REPL         (1)
+#define MICROPY_REPL_AUTO_INDENT 	(1)
+#define MICROPY_REPL_EVENT_DRIVEN   (1)
+#define MICROPY_LONGINT_IMPL        (MICROPY_LONGINT_IMPL_NONE)
+#define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_FLOAT)
+#define MICROPY_ENABLE_SOURCE_LINE  (1)
+#define MICROPY_ENABLE_DOC_STRING   (1)
+#define MICROPY_MODULE_WEAK_LINKS 	(1)
+#define MICROPY_MODULE_FROZEN_MPY 	(1)
+
+// Optimisations
+#define MICROPY_OPT_CACHE_MAP_LOOKUP_IN_BYTECODE (0) //fails 3:
+#define MICROPY_OPT_MPZ_BITWISE (1)
+#define MICROPY_OPT_MATH_FACTORIAL (1)
+
+// Builtins
+#define MICROPY_PY_FUNCTION_ATTRS 			(1)
+#define MICROPY_PY_DESCRIPTORS 				(1)
+#define MICROPY_PY_DELATTR_SETATTR 			(1)
+#define MICROPY_PY_BUILTINS_STR_UNICODE     (1)
+#define MICROPY_PY_BUILTINS_STR_CENTER      (1)
+#define MICROPY_PY_BUILTINS_STR_PARTITION   (1)
+#define MICROPY_PY_BUILTINS_STR_SPLITLINES  (1)
+#define MICROPY_PY_STR_BYTES_CMP_WARN       (1)
+#define MICROPY_PY_FUNCTION_ATTRS           (1)
+#define MICROPY_PY_DESCRIPTORS              (1)
+#define MICROPY_PY_BUILTINS_MEMORYVIEW      (1)
+#define MICROPY_PY_BUILTINS_SLICE_ATTRS     (1)
+#define MICROPY_PY_BUILTINS_FROZENSET       (1)
+#define MICROPY_PY_BUILTINS_RANGE_BINOP 	(1)
+#define MICROPY_PY_BUILTINS_NEXT2 			(1)
+#define MICROPY_PY_BUILTINS_ROUND_INT       (1)
+#define MICROPY_PY_BUILTINS_TIMEOUTERROR    (1)
+#define MICROPY_PY_ALL_SPECIAL_METHODS      (1)
+#define MICROPY_PY_BUILTINS_COMPILE         (1)
+#define MICROPY_PY_BUILTINS_EXECFILE        (1)
+#define MICROPY_PY_BUILTINS_NOTIMPLEMENTED  (1)
+#define MICROPY_PY_BUILTINS_INPUT           (0) //look at l8er
+#define MICROPY_PY_BUILTINS_POW3            (1)
+#define MICROPY_PY_BUILTINS_HELP 			(1)
+#define MICROPY_PY_BUILTINS_HELP_MODULES    (1)
+#define MICROPY_PY_MICROPYTHON_MEM_INFO     (1)
+#define MICROPY_PY_ARRAY_SLICE_ASSIGN       (1)
+#define MICROPY_PY_COLLECTIONS_DEQUE        (1)
+#define MICROPY_PY_COLLECTIONS_ORDEREDDICT  (1)
+#define MICROPY_PY_MATH_SPECIAL_FUNCTIONS   (1)
+#define MICROPY_PY_CMATH                    (1)
+#define MICROPY_PY_IO_IOBASE                (1)
+#define MICROPY_PY_IO_FILEIO                (0)
+#define MICROPY_PY_IO_BYTESIO               (0)
+#define MICROPY_PY_IO_BUFFEREDWRITER        (0)
+#define MICROPY_PY_SYS_MAXSIZE              (1)
+#define MICROPY_PY_SYS_EXIT                 (1)
+#define MICROPY_PY_SYS_GETSIZEOF 			(1)
+#define MICROPY_PY_SYS_STDFILES             (0)
+#define MICROPY_PY_SYS_STDIO_BUFFER         (0)
+#define MICROPY_PY_UERRNO                   (0)
+
+
+// Externals
+#define MICROPY_PY_UCTYPES 			(1)
+#define MICROPY_PY_UZLIB			(1)
+#define MICROPY_PY_UJSON 			(1)
+#define MICROPY_PY_URE 				(1)
+#define MICROPY_PY_URE_MATCH_GROUPS (1)
+#define MICROPY_PY_URE_SUB 			(1)
+#define MICROPY_PY_UHEAPQ 			(1)
+#define MICROPY_PY_UTIMEQ 			(0) //this shit defines DEBUG ._.
+#define MICROPY_PY_UHASHLIB 		(1)
+#define MICROPY_PY_UHASHLIB_MD5 	(0) //not working // look at l8er
+#define MICROPY_PY_UHASHLIB_SHA1  	(0)
+#define MICROPY_PY_UHASHLIB_SHA256 	(1)
+#define MICROPY_PY_BTREE 			(0) //look at berkley stuff l8er
+#define MICROPY_PY_USELECT          (0) //not working // look at l8er
+#define MICROPY_PY_FRAMEBUF 		(1)
+
+#define MICROPY_PY_MACHINE 				(1)
+#define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
 
 
 // type definitions for the specific machine
@@ -91,8 +130,8 @@ extern const struct _mp_obj_module_t mp_module_machine;
 // We need to provide a declaration/definition of alloca()
 #include <alloca.h>
 
-#define MICROPY_HW_BOARD_NAME "minimal"
-#define MICROPY_HW_MCU_NAME "EMW3060"
+#define MICROPY_HW_BOARD_NAME "EMW3060"
+#define MICROPY_HW_MCU_NAME "MOC108"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)

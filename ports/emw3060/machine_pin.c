@@ -79,6 +79,13 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
 	{{&machine_pin_type}, MXOS_GPIO_29},
 };
 
+mxos_gpio_t machine_pin_get_id(mp_obj_t pin_in) {
+    if (mp_obj_get_type(pin_in) != &machine_pin_type) {
+        mp_raise_ValueError("expecting a pin");
+    }
+    machine_pin_obj_t *self = pin_in;
+    return self->id;
+}
 
 STATIC void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_pin_obj_t *self = self_in;

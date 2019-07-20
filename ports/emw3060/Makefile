@@ -38,7 +38,23 @@ SRC_C = \
 
 SRC_C_FROZEN = $(BUILD)/_frozen_mpy.c
 
-SRC_QSTR += $(SRC_C)
+SRC_C_EXTMOD = $(addprefix extmod/, \
+	moductypes.c \
+	moduzlib.c \
+	modujson.c \
+	modure.c \
+	moduheapq.c \
+	moduhashlib.c \
+	modframebuf.c \
+	)
+
+INC += $(addprefix -I$extmod/, \
+	. \
+	re1.5 \
+	uzlip \
+	)
+
+SRC_QSTR += $(SRC_C) $(SRC_C_EXTMOD)
 
 INC += -I$(BUILD)/../app/upy
 
@@ -73,7 +89,6 @@ INC += $(addprefix -I$(BUILD)/../app/mxos/, \
 	MXOS/system \
 	MXOS/system/kv \
 	MXIS/system/kv/include \
-	MXOS/system/easylink/aws \
 	MXOS/system/command_console \
 	MXOS/system/easylink/internal \
 	MXOS/system/tftp_ota \
@@ -84,7 +99,7 @@ INC += $(addprefix -I$(BUILD)/../app/mxos/, \
 	libraries/protocols/mdns/internal \
 	)
 
-OBJ = $(PY_CORE_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o)) $(addprefix $(BUILD)/, $(SRC_C_FROZEN:.c=.o))
+OBJ = $(PY_CORE_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o)) $(addprefix $(BUILD)/, $(SRC_C_EXTMOD:.c=.o)) $(addprefix $(BUILD)/, $(SRC_C_FROZEN:.c=.o))
 
 all: mxos-clean $(BUILD)/upy@MK3060.ota.bin
 
@@ -105,21 +120,22 @@ $(BUILD)/upy@MK3060.ota.bin: $(BUILD)/upython.a mxos-setup
 	$(Q)$(CP) app/build/upy@MK3060/binary/upy@MK3060.ota.bin $(BUILD)
 
 mxos-setup:
-	$(ECHO) "Fixing MXOS faults"
-	$(Q)$(CP) mxos_board.h app/mxos/board/MK3060/mxos_board.h
-	$(Q)$(CP) mxos_map_parse_gcc.py app/mxos/makefiles/scripts/map_parse_gcc.py
-	$(Q)$(RM) -r -f app/mxos/platform/MCU/MOC108/tools/xz/linux
+	$(ECHO) "Modifying MXOS"
+	$(Q)$(CP) mxosconf/mxos_board.h app/mxos/board/MK3060/mxos_board.h
+	$(Q)$(CP) mxosconf/mxos_board_conf.h app/mxos/board/MK3060/mxos_board_conf.h
+	$(Q)$(CP) mxosconf/map_parse_gcc.py app/mxos/makefiles/scripts/map_parse_gcc.py
+	$(Q)$(RM) -rf app/mxos/platform/MCU/MOC108/tools/xz/linux
 	$(Q)$(MKDIR) app/mxos/platform/MCU/MOC108/tools/xz/linux
 	$(Q)ln -s /usr/bin/xz app/mxos/platform/MCU/MOC108/tools/xz/linux/xz
 	$(ECHO) "Faking MXOS project"
 	$(ECHO) "ROOT=.\nMICODER=$(MICODER)" >> app/.mxos
 	$(Q)$(MKDIR) -p app/build/upy@MK3060
-	$(Q)$(CP) mxosconfig.mk app/build/upy@MK3060/config.mk
+	$(Q)$(CP) mxosconf/mxosconfig.mk app/build/upy@MK3060/config.mk
 
 .PHONY: mxos-setup
 
 mxos-clean:
-	$(Q)$(RM) -r -f app/build
+	$(Q)$(RM) -rf app/build
 
 .PHONY: mxos-clean
 
